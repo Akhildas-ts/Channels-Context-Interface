@@ -10,6 +10,8 @@ import (
 
 //channels are mainly used multi thread concepts
 
+
+
 func channelBaicTest() {
 
 	// when we insert a data into the channel at the same time it need to exit , otherwise it show dead lock
@@ -33,27 +35,60 @@ func doWork() int {
 
 func main() {
 
-	// working of the channels in go 
-	// in unbuffered channel there will be a send and reciver at a time other wize it give dead lock 
-	dataChan := make(chan int)
+
+	
+	dataChan:= make(chan int, 3)
+
 
 	go func() {
+    
 
-		defer close(dataChan)
-		for i:=0;i<10;i++{
-
-			dataChan <- i
-		}
+		dataChan <- 10
 		
+		dataChan <-20
+
+		dataChan <- 30
+
+		dataChan <- 40
+		dataChan <- 40
+
+		close(dataChan)
+
 	}()
 
-	v := dataChan
-	for n:= range v{
+	// for val := range dataChan{
 
-		fmt.Println(n)
+	// 	fmt.Println(val)
+	// }
+
+
+	// n := dataChan
+	//  for val := range n{
+	// 	fmt.Println(val)
+	//  }
+
+	// working of the channels in go 
+	// // in unbuffered channel there will be a send and reciver at a time other wize it give dead lock 
+	// dataChan := make(chan int)
+
+	// go func() {
+
+	// 	defer close(dataChan)
+	// 	for i:=0;i<10;i++{
+
+	// 		dataChan <- i
+	// 	}
 		
-	}
+	// }()
 
+	// v := dataChan
+	// for n:= range v{
+
+	// 	fmt.Println(n)
+		
+	// }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 
 	// with out close(dataChann)the channel we can see the deadlock , channcels are waiting for the data
@@ -88,4 +123,27 @@ func main() {
 
 	// }
 
+
+}
+
+
+func bufferdChann() {
+
+
+	dataChan:= make(chan int)
+
+
+	go func() {
+
+		dataChan <- 10
+		dataChan <-20
+		dataChan <- 30
+
+	}()
+
+
+	n := dataChan
+	for range n{
+		fmt.Println(n)
+	}
 }
